@@ -245,14 +245,27 @@ section {
   padding: var(--space-14);
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--color-border);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Blur lives on the pseudo so WebKit can clip it to border-radius
+   separately from the element's own border. */
+.hero-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--color-border);
-  overflow: hidden;
-  /* WebKit clips backdrop-filter to border-radius via the mask
-     path. White through 100% of the box; black (transparent) only
-     at 200%, outside the visible card, so corners stay un-vignetted. */
-  -webkit-mask-image: -webkit-radial-gradient(#fff 0%, #fff 100%, #000 200%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .hero-left {
@@ -366,13 +379,29 @@ section {
   padding: 10px;
   border-radius: 36px;
   background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
   /* Bezel border set to the real gray border token, per direction —
      the Figma export used a translucent white border here, treating
      the bezel as a bare device edge; using colorBorder instead so it
      reads consistently with the rest of the glass system. */
   border: 1px solid var(--color-border);
+}
+
+.phone-bezel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.phone-bezel > * {
+  position: relative;
+  z-index: 1;
 }
 
 .phone-screen {
