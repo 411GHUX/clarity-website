@@ -59,6 +59,11 @@ body {
   overflow-x: hidden;
 }
 
+body.scroll-locked {
+  overflow: hidden;
+  padding-right: var(--scrollbar-width);
+}
+
 img,
 svg {
   display: block;

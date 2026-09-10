@@ -30,20 +30,19 @@
     document.fonts.ready.then(syncNavOffset);
   }
 
-  function getScrollbarWidth() {
-    return window.innerWidth - document.documentElement.clientWidth;
-  }
+  var scrollbarWidth =
+    window.innerWidth - document.documentElement.clientWidth;
+  document.documentElement.style.setProperty(
+    "--scrollbar-width",
+    scrollbarWidth + "px"
+  );
 
   function openModal(modal) {
     if (!modal) return;
     lastFocusedEl = document.activeElement;
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden", "false");
-    var scrollbarWidth = getScrollbarWidth();
-    document.body.style.overflow = "hidden";
-    if (scrollbarWidth > 0) {
-      document.body.style.paddingRight = scrollbarWidth + "px";
-    }
+    document.body.classList.add("scroll-locked");
 
     var focusTarget = modal.querySelector(
       'input, textarea, button:not([data-close-modal])'
@@ -59,8 +58,7 @@
     if (!modal) return;
     modal.classList.remove("is-open");
     modal.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-    document.body.style.paddingRight = "";
+    document.body.classList.remove("scroll-locked");
     if (lastFocusedEl && typeof lastFocusedEl.focus === "function") {
       lastFocusedEl.focus();
     }
