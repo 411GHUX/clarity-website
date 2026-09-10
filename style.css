@@ -997,7 +997,11 @@ section {
   }
 
   .hero-right {
-    max-width: 240px;
+    max-width: 280px;
+  }
+
+  .phone-feature-row:nth-child(n+3) {
+    display: none;
   }
 
   .methodology-wrapper {
