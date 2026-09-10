@@ -248,6 +248,11 @@ section {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--color-border);
+  overflow: hidden;
+  /* WebKit clips backdrop-filter to border-radius via the mask
+     path. White through 100% of the box; black (transparent) only
+     at 200%, outside the visible card, so corners stay un-vignetted. */
+  -webkit-mask-image: -webkit-radial-gradient(#fff 0%, #fff 100%, #000 200%);
 }
 
 .hero-left {
@@ -1002,6 +1007,10 @@ section {
 
   .phone-feature-row:nth-child(n+3) {
     display: none;
+  }
+
+  .phone-screen {
+    aspect-ratio: auto;
   }
 
   .methodology-wrapper {
