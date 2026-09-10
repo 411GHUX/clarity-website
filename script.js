@@ -30,12 +30,20 @@
     document.fonts.ready.then(syncNavOffset);
   }
 
+  function getScrollbarWidth() {
+    return window.innerWidth - document.documentElement.clientWidth;
+  }
+
   function openModal(modal) {
     if (!modal) return;
     lastFocusedEl = document.activeElement;
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden", "false");
+    var scrollbarWidth = getScrollbarWidth();
     document.body.style.overflow = "hidden";
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = scrollbarWidth + "px";
+    }
 
     var focusTarget = modal.querySelector(
       'input, textarea, button:not([data-close-modal])'
@@ -52,6 +60,7 @@
     modal.classList.remove("is-open");
     modal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
     if (lastFocusedEl && typeof lastFocusedEl.focus === "function") {
       lastFocusedEl.focus();
     }
