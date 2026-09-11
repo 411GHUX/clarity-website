@@ -45,7 +45,7 @@
     document.body.classList.add("scroll-locked");
 
     var focusTarget = modal.querySelector(
-      'input, textarea, button:not([data-close-modal])'
+      'input:not([name="website"]), textarea, button:not([data-close-modal])'
     );
     if (focusTarget) {
       window.requestAnimationFrame(function () {
@@ -123,32 +123,78 @@
     }, 4000);
   }
 
-  // ---------- Contact form (faked — no backend yet) ----------
-  // Per project decision: submitting mimics a successful send, the
-  // modal closes, and a success toast appears. Real backend (Formspree
-  // or a small serverless function) gets wired up after the site is
-  // deployed — this intentionally does not send anything yet.
+  // ---------- Contact form ----------
 
   var contactForm = document.getElementById("contact-form");
 
   if (contactForm) {
+    var formErrorEl = document.getElementById("contact-form-error");
+
+    function showFormError(message) {
+      if (!formErrorEl) return;
+      formErrorEl.textContent = message;
+      formErrorEl.hidden = false;
+    }
+
+    function clearFormError() {
+      if (!formErrorEl) return;
+      formErrorEl.textContent = "";
+      formErrorEl.hidden = true;
+    }
+
     contactForm.addEventListener("submit", function (e) {
       e.preventDefault();
+      clearFormError();
 
       var submitBtn = contactForm.querySelector(".form-submit");
       var originalLabel = submitBtn.textContent;
       submitBtn.disabled = true;
       submitBtn.textContent = "Sending…";
 
-      window.setTimeout(function () {
-        var modal = document.getElementById("contact-modal");
-        closeModal(modal);
-        showToast("Message sent — we'll be in touch soon.");
+      var payload = {
+        name: contactForm.elements.name.value,
+        email: contactForm.elements.email.value,
+        message: contactForm.elements.message.value,
+        website: contactForm.elements.website.value,
+      };
 
-        contactForm.reset();
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalLabel;
-      }, 500);
+      fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+        .then(function (res) {
+          return res
+            .json()
+            .catch(function () {
+              return { ok: false, error: "Something went wrong. Please try again." };
+            })
+            .then(function (data) {
+              return { data: data };
+            });
+        })
+        .then(function (result) {
+          if (result.data && result.data.ok) {
+            var modal = document.getElementById("contact-modal");
+            closeModal(modal);
+            showToast("Message sent — we'll be in touch soon.");
+            contactForm.reset();
+            clearFormError();
+            return;
+          }
+
+          showFormError(
+            (result.data && result.data.error) ||
+              "Something went wrong. Please try again."
+          );
+        })
+        .catch(function () {
+          showFormError("Something went wrong. Please try again.");
+        })
+        .then(function () {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalLabel;
+        });
     });
   }
 })();
