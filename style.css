@@ -415,8 +415,6 @@ section {
 
 .phone-screen .phone-blob {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(24px);
 }
 
 .phone-blob-sage-1 {
@@ -424,7 +422,7 @@ section {
   height: 47%;
   left: -20%;
   top: 5%;
-  background: var(--color-secondary);
+  background: radial-gradient(ellipse at center, var(--color-secondary) 0%, var(--color-secondary) 40%, transparent 78%);
   opacity: 0.08;
 }
 
@@ -433,7 +431,7 @@ section {
   height: 41%;
   left: -15%;
   top: 65%;
-  background: var(--color-secondary);
+  background: radial-gradient(ellipse at center, var(--color-secondary) 0%, var(--color-secondary) 40%, transparent 78%);
   opacity: 0.07;
 }
 
@@ -442,7 +440,7 @@ section {
   height: 47%;
   right: -15%;
   top: 48%;
-  background: var(--color-primary);
+  background: radial-gradient(ellipse at center, var(--color-primary) 0%, var(--color-primary) 40%, transparent 78%);
   opacity: 0.07;
 }
 
